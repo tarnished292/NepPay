@@ -5,7 +5,6 @@ use uuid::Uuid;
 pub struct Order {
     pub id: Uuid,
     pub amount: u32,
-    provider: Provider,
     merchant_id: String,
     status: Status,
     created_at: DateTime<Utc>,
@@ -37,13 +36,12 @@ pub enum Provider {
     Fonepay,
 }
 
-pub fn create_order(amount: u32, merchant: String, provider: Provider) -> Order {
+pub fn create_order(amount: u32, merchant: String) -> Order {
     let random_id = Uuid::new_v4();
 
     Order {
         id: random_id,
         amount,
-        provider,
         merchant_id: merchant,
         status: Status::Pending,
         created_at: Utc::now(),
