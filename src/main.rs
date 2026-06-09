@@ -1,23 +1,14 @@
-struct Order {
-    id: String,
-    amount: i32,
-    status: Status,
-}
+mod order;
 
- #[derive(Debug)]
-enum Status {
-    Pending,
-    Paid,
-    Failed,
-}
+use order::{create_order, Provider};
+
 
 fn main() {
-  let order = Order {
-      id: String::from("162gghf1"),
-      amount: 1000,
-      status: Status::Pending,
-  };
-  println!("ID: {}", order.id);  
-  println!("Amount: {}", order.amount);  
-  println!("Status: {:?}", order.status);  
+    // Merchant account
+    let merchant_id = "EPAYTEST";
+
+    let mut order = create_order(1000, merchant_id.to_string(), Provider::Esewa);
+    order.mark_paid();
+    println!("{:?}", order);
 }
+
