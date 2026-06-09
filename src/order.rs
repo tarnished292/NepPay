@@ -1,31 +1,33 @@
+use chrono::{DateTime, Utc};
 use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct Order {
-    id: Uuid,
-    amount: u32,
+    pub id: Uuid,
+    pub amount: u32,
     provider: Provider,
     merchant_id: String,
     status: Status,
+    created_at: DateTime<Utc>,
 }
 
 impl Order {
     pub fn mark_paid(&mut self) {
-        self.status = Status::Paid;
+        self.status = Status::Processing;
     }
 
     pub fn mark_failed(&mut self) {
-        self.status = Status::FAILED;
+        self.status = Status::Cancelled;
     }
 }
 
 #[derive(Debug)]
-enum Status {
-    PENDING,
-    PROCESSING,
-    PAID,
-    FAILED,
-    EXPIRED,
+pub enum Status {
+    Pending,
+    Processing,
+    Delivered,
+    Cancelled,
+    Refunded,
 }
 
 #[derive(Debug)]
@@ -43,6 +45,7 @@ pub fn create_order(amount: u32, merchant: String, provider: Provider) -> Order 
         amount,
         provider,
         merchant_id: merchant,
-        status: Status::PENDING,
+        status: Status::Pending,
+        created_at: Utc::now(),
     }
 }
