@@ -99,6 +99,6 @@ Released under the **MIT License**.
 
 <div align="center">
 
-Built with ❤️ for Nepal &nbsp;•&nbsp; NepPay
+Built By Developer for Developer &nbsp;•&nbsp; NepPay
 
 </div>
