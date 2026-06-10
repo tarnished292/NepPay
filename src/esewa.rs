@@ -1,5 +1,5 @@
-use serde::Serialize;
 use crate::{compute::compute_hmac, initiate::PaymentIntent, order::Order};
+use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct EsewaPayload {
@@ -18,7 +18,7 @@ pub struct EsewaPayload {
 
 pub struct EsewaRedirect {
     pub url: String,
-    pub payload: EsewaPayload,  
+    pub payload: EsewaPayload,
 }
 
 pub struct Merchant {
@@ -29,24 +29,20 @@ pub struct Merchant {
 }
 
 pub fn esewa_payload(intent: &PaymentIntent, order: &Order, merchant: &Merchant) -> EsewaPayload {
+    let tax_amount = 0;
+    let product_service_charge = 10;
+    let product_delivery_charge = 0;
 
+    let total_amount = order.amount + tax_amount + product_service_charge + product_delivery_charge;
+    
     let signed_field_names = "total_amount,transaction_uuid,product_code".to_string();
 
     let message = format!(
         "total_amount={},transaction_uuid={},product_code={}",
-        order.amount, intent.id, merchant.product_code
+        total_amount, intent.id, merchant.product_code
     );
 
     let signature = compute_hmac(&merchant.secret_key, &message);
-
-    let tax_amount = 0;
-    let product_service_charge = 0;
-    let product_delivery_charge = 0;
-
-    let total_amount = order.amount
-        + tax_amount
-        + product_service_charge
-        + product_delivery_charge;
 
     EsewaPayload {
         amount: order.amount,
@@ -63,7 +59,6 @@ pub fn esewa_payload(intent: &PaymentIntent, order: &Order, merchant: &Merchant)
     }
 }
 
-
 pub async fn send_to_esewa(payload: EsewaPayload) -> String {
     let client = reqwest::Client::new();
     let url = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
@@ -76,5 +71,4 @@ pub async fn send_to_esewa(payload: EsewaPayload) -> String {
         .expect("Failed to send");
 
     res.url().to_string()
-
 }

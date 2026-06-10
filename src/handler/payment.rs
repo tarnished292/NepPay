@@ -1,5 +1,5 @@
 use axum::http::StatusCode;
-use axum::{Json, extract::Query, response::Redirect};
+use axum::{Json, extract::Query};
 use base64::{Engine, engine::general_purpose};
 use serde::{Deserialize, Serialize};
 
@@ -18,19 +18,22 @@ pub struct PaymentResponse {
 #[derive(Deserialize)]
 pub struct PaymentRequest {
     pub amount: u32,
-    pub merchant_id: String,
+    pub merchant_order_id: String, //merchant product order id
+    pub merchant_id: String,     // nep pay website give unique merchant id to their mechant
     pub provider: Provider,
+    pub success_url: String,
+    pub failure_url: String
 }
 
 pub async fn create_payment(Json(body): Json<PaymentRequest>) -> Json<PaymentResponse> {
     let merchant = Merchant {
         product_code: "EPAYTEST".to_string(),
         secret_key: "8gBm/:&EnhH.1/q".to_string(),
-        success_url: "http://localhost:3000/webhook/esewa".to_string(),
-        failure_url: "https://developer.esewa.com.np/failure".to_string(),
+        success_url: body.success_url,
+        failure_url: body.failure_url,
     };
 
-    let order = create_order(body.amount, body.merchant_id.to_string());
+    let order = create_order(body.merchant_order_id, body.amount, body.merchant_id);
     let intent = initiate_payment(&order, body.provider);
     let payload = esewa_payload(&intent, &order, &merchant);
     let payment_url = send_to_esewa(payload).await;

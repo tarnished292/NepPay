@@ -2,7 +2,7 @@
 
 # 🏔️ NepPay
 
-**Developer-First Payment Infrastructure for Nepal**
+**Developer-First Infrastructure for Nepal**
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Rust](https://img.shields.io/badge/built_with-Rust-orange.svg)

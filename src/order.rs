@@ -1,10 +1,9 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
-use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct Order {
-    pub id: Uuid,
+    pub id: String,
     pub amount: u32,
     pub merchant_id: String,
     pub status: Status,
@@ -13,7 +12,7 @@ pub struct Order {
 
 impl Order {
     pub fn mark_paid(&mut self) {
-        self.status = Status::Pending;
+        self.status = Status::Paid;
     }
 
     pub fn mark_failed(&mut self) {
@@ -36,11 +35,9 @@ pub enum Provider {
     Fonepay,
 }
 
-pub fn create_order(amount: u32, merchant: String) -> Order {
-    let random_id = Uuid::new_v4();
-
+pub fn create_order(id: String, amount: u32, merchant: String) -> Order {
     Order {
-        id: random_id,
+        id,
         amount,
         merchant_id: merchant,
         status: Status::Pending,

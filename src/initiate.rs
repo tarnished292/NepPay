@@ -1,4 +1,4 @@
-use crate::order::{Order, Provider, Status};
+use crate::order::{Order, Provider};
 use chrono::{DateTime, Utc};
 use uuid::Uuid;
 
@@ -12,7 +12,7 @@ enum IntentStatus {
 
 pub struct PaymentIntent {
     pub id: Uuid,
-    pub order_id: Uuid,
+    pub order_id: String,   //Merchant Product Order Id
     provider_txn_id: Option<String>,
     provider: Provider,
     state: IntentStatus,
@@ -24,7 +24,7 @@ pub fn initiate_payment(order: &Order, provider: Provider) -> PaymentIntent {
 
     PaymentIntent {
         id: random_id,
-        order_id: order.id,
+        order_id: order.id.clone(),
         provider_txn_id: None,
         provider,
         state: IntentStatus::Initiated,
