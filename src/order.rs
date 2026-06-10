@@ -1,18 +1,19 @@
 use chrono::{DateTime, Utc};
+use serde::Deserialize;
 use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct Order {
     pub id: Uuid,
     pub amount: u32,
-    merchant_id: String,
-    status: Status,
-    created_at: DateTime<Utc>,
+    pub merchant_id: String,
+    pub status: Status,
+    pub created_at: DateTime<Utc>,
 }
 
 impl Order {
     pub fn mark_paid(&mut self) {
-        self.status = Status::Processing;
+        self.status = Status::Pending;
     }
 
     pub fn mark_failed(&mut self) {
@@ -23,13 +24,12 @@ impl Order {
 #[derive(Debug)]
 pub enum Status {
     Pending,
-    Processing,
-    Delivered,
+    Paid,
     Cancelled,
     Refunded,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub enum Provider {
     Esewa,
     Khalti,
