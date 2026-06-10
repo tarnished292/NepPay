@@ -16,10 +16,6 @@ pub struct EsewaPayload {
     signature: String,
 }
 
-pub struct EsewaRedirect {
-    pub url: String,
-    pub payload: EsewaPayload,
-}
 
 pub struct Merchant {
     pub product_code: String, // EPAYTEST
@@ -72,3 +68,4 @@ pub async fn send_to_esewa(payload: EsewaPayload) -> String {
 
     res.url().to_string()
 }
+    
