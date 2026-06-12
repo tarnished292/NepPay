@@ -2,10 +2,10 @@ use tower_http::cors::CorsLayer;
 
 mod order;
 mod compute;
-mod esewa;
 mod server;
-mod initiate;
+mod domain;
 mod handler;
+mod providers;
 
 #[tokio::main]
 async fn main() {
